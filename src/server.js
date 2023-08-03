@@ -13,6 +13,8 @@ app.use(
   })
 )
 
+app.use(express.json());
+
 const HOST = 'localhost'
 const port = 5000
 
@@ -56,17 +58,13 @@ app.delete('/usuario/:id', async (req,res) => {
 res.status(200).json('Usuário deletado com sucesso')
 })
 
-app.put('/usuario/:id', async (req, res) => {
+app.put('/usuario/:id', async (req, res) =>{
   const { nome, idade, ativo, email } = req.body;
   const usuario = { nome, idade, ativo, email };
+  const id = req.params.id;
 
-  const usuarioDB = await Usuario.create(usuario);
-
-  res.status(201).json({
-    data: usuarioDB,
-    msg: "Usuário criado com sucesso!",
-  });
-
+  await Usuario.updateOne({ _id: id}, usuario);
+  res.status(200).json('Usuário atualizado')
 })
 
 const DB_USER= process.env.DB_USER
